@@ -17,6 +17,8 @@ module tt_um_yuri_panchul_adder_with_flow_control
     input        rst_n     // reset_n - low to reset
 );
 
+    //------------------------------------------------------------------------
+
     // All output pins must be assigned. If not used, assign to 0.
 
     assign uio_out = '0;
@@ -24,28 +26,31 @@ module tt_um_yuri_panchul_adder_with_flow_control
 
     // List all unused inputs to prevent warnings
 
-    wire _unused = & { ena, ui_in [7:3], 1'b0 };
+    wire _unused = & { ena, ui_in [7:2], 1'b0 };
+
+    //------------------------------------------------------------------------
 
     // User design module instantiation
 
-    adder_with_flow_control
-    # (.width (4))
-    inst
-    (
-        .clk       (   clk           ),
-        .rst       ( ~ rst_n         ),
+    wire rst   = ~ rst_n;
 
-        .a_vld     (   ui_in   [0]   ),
-        .a_rdy     (   uo_out  [0]   ),
-        .a_data    (   uio_in  [3:0] ),
+    wire left  = ui_in [1];
+    wire right = ui_in [0];
 
-        .b_vld     (   ui_in   [1]   ),
-        .b_rdy     (   uo_out  [1]   ),
-        .b_data    (   uio_in  [7:4] ),
+    wire       hsync, vsync;
+    wire [1:0] red, green, blue;
 
-        .sum_vld   (   uo_out  [2]   ),
-        .sum_rdy   (   ui_in   [2]   ),
-        .sum_data  (   uo_out  [7:3] )
-);
+    game_and_vga i_game_and_vga (.*);
+
+    //------------------------------------------------------------------------
+
+    assign uo_out [0] = red   [1];
+    assign uo_out [1] = green [1];
+    assign uo_out [2] = blue  [1];
+    assign uo_out [3] = vsync;
+    assign uo_out [4] = red   [0];
+    assign uo_out [5] = green [0];
+    assign uo_out [6] = blue  [0];
+    assign uo_out [7] = hsync;
 
 endmodule
