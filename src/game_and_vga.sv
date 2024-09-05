@@ -1,84 +1,43 @@
 `include "game_config.svh"
 
 module game_and_vga
-# (
-    parameter  clk_mhz       = 50,
-               pixel_mhz     = 25,
-
-
-               w_key         = 4,
-               w_sw          = 8,
-               w_led         = 8,
-               w_digit       = 8,
-               w_gpio        = 100,
-
-               screen_width  = 640,
-               screen_height = 480,
-
-               w_red         = 4,
-               w_green       = 4,
-               w_blue        = 4,
-
-               w_x           = $clog2 ( screen_width  ),
-               w_y           = $clog2 ( screen_height ),
-
-               strobe_to_update_xy_counter_width
-                   = $clog2 (clk_mhz * 1000 * 1000) - 6
-)
 (
-    input                        clk,
-    input                        slow_clk,
-    input                        rst,
+    input        clk,
+    input        rst,
 
-    // Keys, switches, LEDs
+    input        left,
+    input        right,
 
-    input        [w_key   - 1:0] key,
-    input        [w_sw    - 1:0] sw,
-    output logic [w_led   - 1:0] led,
+    output       hsync,
+    output       vsync,
 
-    // A dynamic seven-segment display
-
-    output logic [          7:0] abcdefgh,
-    output logic [w_digit - 1:0] digit,
-
-    // Graphics
-
-    input                        display_on,
-
-    input        [w_x     - 1:0] x,
-    input        [w_y     - 1:0] y,
-
-    output logic [w_red   - 1:0] red,
-    output logic [w_green - 1:0] green,
-    output logic [w_blue  - 1:0] blue,
-
-    // Microphone, sound output and UART
-
-    input        [         23:0] mic,
-    output       [         15:0] sound,
-
-    input                        uart_rx,
-    output                       uart_tx,
-
-    // General-purpose Input/Output
-
-    inout        [w_gpio  - 1:0] gpio
+    output [1:0] red,
+    output [1:0] green,
+    output [1:0] blue
 );
 
     //------------------------------------------------------------------------
 
-       assign led        = '0;
-       assign abcdefgh   = '0;
-       assign digit      = '0;
-    // assign red        = '0;
-    // assign green      = '0;
-    // assign blue       = '0;
-       assign sound      = '0;
-       assign uart_tx    = '1;
+    localparam clk_mhz       = 25,
+               pixel_mhz     = 25,
+
+               screen_width  = 640,
+               screen_height = 480,
+
+               strobe_to_update_xy_counter_width
+                   = $clog2 (clk_mhz * 1000 * 1000) - 6,
+
+               w_x           = $clog2 ( screen_width  ),
+               w_y           = $clog2 ( screen_height );
 
     //------------------------------------------------------------------------
 
-    wire [`GAME_RGB_WIDTH - 1:0] rgb;
+    wire display_on;
+
+    wire [w_x - 1:0] x;
+    wire [w_y - 1:0] y;
+
+    wire [`GAME_RGB_WIDTH - 1:0] game_rgb;
 
     game_top
     # (
@@ -90,22 +49,44 @@ module game_and_vga
     )
     i_game_top
     (
-        .clk              (   clk                ),
-        .rst              (   rst                ),
+        .clk              (   clk            ),
+        .rst              (   rst            ),
 
-        .launch_key       ( | key                ),
-        .left_right_keys  ( { key [1], key [0] } ),
+        .launch_key       (   left | right   ),
+        .left_right_keys  ( { left , right } ),
 
-        .display_on       (   display_on         ),
+        .display_on       (   display_on     ),
 
-        .x                (   x                  ),
-        .y                (   y                  ),
+        .x                (   x              ),
+        .y                (   y              ),
 
-        .rgb              (   rgb                )
+        .rgb              (   game_rgb       )
     );
 
-    assign red   = { w_red   { rgb [2] } };
-    assign green = { w_green { rgb [1] } };
-    assign blue  = { w_blue  { rgb [0] } };
+    assign red   = { 2 { game_rgb [2] } };
+    assign green = { 2 { game_rgb [1] } };
+    assign blue  = { 2 { game_rgb [0] } };
+
+    //------------------------------------------------------------------------
+
+    wire [9:0] x10; assign x = x10;
+    wire [9:0] y10; assign y = y10;
+
+    vga
+    # (
+        .CLK_MHZ     ( clk_mhz    ),
+        .PIXEL_MHZ   ( pixel_mhz  )
+    )
+    i_vga
+    (
+        .clk         ( clk        ),
+        .rst         ( rst        ),
+        .hsync       ( hsync      ),
+        .vsync       ( vsync      ),
+        .display_on  ( display_on ),
+        .hpos        ( x10        ),
+        .vpos        ( y10        ),
+        .pixel_clk   (            )
+    );
 
 endmodule
