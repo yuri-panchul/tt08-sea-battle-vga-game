@@ -12,7 +12,7 @@ You can also include images in this folder and reference them in the markdown. E
 *Sea Battle* is a VGA game with sprites for the Tiny Tapeout Demoscene
 competition.
 
-The design is used as a part of
+The *Sea Battle* design is used as a part of
 [basics-graphics-music](https://github.com/yuri-panchul/basics-graphics-music)
 GitHub repository of Verilog examples, which is maintained by the [Verilog
 Meetup](https://verilog-meetup.com/) community.
@@ -26,8 +26,8 @@ display using a Tiny VGA board with 2 bits per color channel.
 ## How to test
 
 The design was tested on several FPGA boards and has no meaningful
-self-checking Verilog testbench. We just hope it is going to work on ASIC
-silicon as is.
+self-checking Verilog testbench for simulation. We just hope it is going to
+work on ASIC silicon as is.
 
 ## External hardware
 
