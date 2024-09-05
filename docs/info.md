@@ -20,7 +20,7 @@ Meetup](https://verilog-meetup.com/) community.
 The game uses two keys, *left* and *right*, to control a torpedo. Pressing
 any key starts the movement. The goal is to hit the moving target.
 
-The design is supposed to work on a 25 MHz frequency and connect to a VGA
+The design is supposed to work on a 23 MHz frequency and connect to a VGA
 display using a Tiny VGA board with 2 bits per color channel.
 
 ## How to test

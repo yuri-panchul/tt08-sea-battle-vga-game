@@ -7,13 +7,23 @@ TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
 
 PROJECT_SOURCES = \
-    adder_with_flow_control.sv \
-    fcb_1_single_allows_back_to_back.sv \
-    fcb_2_single_half_perf_no_comb_path.sv \
-    fcb_3_single_for_pipes_with_global_stall.sv \
-    fcb_4_wrapped_2_deep_fifo.sv \
-    fcb_5_double_buffer_from_dally_harting.sv \
-    ff_fifo_pow2_depth.sv project.sv
+    game_and_vga.sv \
+    game_config.svh \
+    game_master_fsm_1_regular_state_encoded.sv \
+    game_master_fsm_2_special_style_one_hot.sv \
+    game_master_fsm_3_special_style_signals_from_state.sv \
+    game_mixer.sv \
+    game_overlap.sv \
+    game_random.sv \
+    game_sprite_control.sv \
+    game_sprite_display_pipelined.sv \
+    game_sprite_display.sv \
+    game_sprite_top.sv \
+    game_strobe.sv \
+    game_timer.sv \
+    game_top.sv \
+    project.sv \
+    vga.sv
 
 ifneq ($(GATES),yes)
 
