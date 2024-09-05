@@ -25,9 +25,9 @@ display using a Tiny VGA board with 2 bits per color channel.
 
 ## How to test
 
-The design was tested on several FPGA boards and has no meaningful
-self-checking Verilog testbench for simulation. We just hope it is going to
-work on ASIC silicon as is.
+The design was tested on several FPGA boards and has no self-checking
+Verilog testbench for simulation. We just hope it is going to work on ASIC
+silicon as is.
 
 ## External hardware
 
