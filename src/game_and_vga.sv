@@ -1,7 +1,6 @@
-`include "config.svh"
 `include "game_config.svh"
 
-module lab_top
+module game_and_vga
 # (
     parameter  clk_mhz       = 50,
                pixel_mhz     = 25,
